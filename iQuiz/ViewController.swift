@@ -26,6 +26,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     ]
     
     var selectedTopic: String = "Marvel Super Heroes"
+//    var selectedTopic: String?
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,13 +67,13 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         selectedTopic = quizTopics[indexPath.row].0
         performSegue(withIdentifier: "setQuestion", sender: self)
     }
-//    
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        if segue.identifier == "setQuestion",
-//           let destinationVC = segue.destination as? Quiz_ViewController {
-//            destinationVC.receivedData = selectedTopic
-//        }
-//    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "setQuestion",
+           let destinationVC = segue.destination as? QuizViewController {
+            destinationVC.topicTitle = selectedTopic
+        }
+    }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 170
