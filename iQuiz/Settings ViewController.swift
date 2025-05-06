@@ -17,7 +17,7 @@ class Settings_ViewController: UIViewController {
     
 
     @IBOutlet weak var OkayButton: UIButton!
-    
+//    
     @IBAction func clickSubmitButton(_ sender: Any) {
         performSegue(withIdentifier: "toHome", sender: OkayButton)
     }
