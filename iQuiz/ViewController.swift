@@ -18,7 +18,29 @@ struct Question: Codable {
     let text: String
     let answers: [String]
     let answer: Int
+    
+    enum CodingKeys: String, CodingKey {
+        case text, answers, answer
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        text = try container.decode(String.self, forKey: .text)
+        answers = try container.decode([String].self, forKey: .answers)
+        
+        // Try decoding as Int first, then fallback to parsing String
+        if let intAnswer = try? container.decode(Int.self, forKey: .answer) {
+            answer = intAnswer
+        } else {
+            let strAnswer = try container.decode(String.self, forKey: .answer)
+            guard let parsedInt = Int(strAnswer) else {
+                throw DecodingError.dataCorruptedError(forKey: .answer, in: container, debugDescription: "Answer is not a valid integer.")
+            }
+            answer = parsedInt
+        }
+    }
 }
+
 //
 
 class QuizCell: UITableViewCell {
@@ -33,12 +55,13 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     @IBOutlet weak var settingsButton: UIBarButtonItem!
     
     // tuple array
-    let quizTopics = [
-        ("Mathematics", "How are you math skills?"),
-        ("Science", "Ready to put your knowledge to the test?"),
-        ("Marvel Super Heroes", "Are you a real Marvel fan?")
-    ]
-    
+//    let quizTopics = [
+//        ("Mathematics", "How are you math skills?"),
+//        ("Science", "Ready to put your knowledge to the test?"),
+//        ("Marvel Super Heroes", "Are you a real Marvel fan?")
+//    ]
+    var quizTopics: [(String, String)] = []
+
 //    var selectedTopic: String = "Science"
     var selectedTopic: String?
 
@@ -73,8 +96,10 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                 do {
                     let decoder = JSONDecoder()
                     let fetchedTopics = try decoder.decode([QuizTopic].self, from: data)
-                    print("success!: \(fetchedTopics.count)")
-                    // TODO: Store fetchedTopics in your quizTopics array and reload tableView
+                    print("success: \(fetchedTopics.count)")
+                    self.quizTopics = fetchedTopics.map { ($0.title, $0.desc) }
+                    self.tableView.reloadData()
+
                 } catch {
                     self.showNetworkAlert(message: "failed")
                     print("error: \(error)")
