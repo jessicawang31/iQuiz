@@ -25,8 +25,7 @@
                                     <navigationItem title="Home" id="LD7-ip-6M6">
                                         <barButtonItem key="rightBarButtonItem" title="Settings" id="tBH-35-QoV">
                                             <connections>
-                                                <action selector="toSettings:" destination="BYZ-38-t0r" id="QLb-wP-yDr"/>
-                                                <segue destination="YZa-yW-2sx" kind="presentation" identifier="toSettings" modalPresentationStyle="fullScreen" id="Fpu-9O-IRV"/>
+                                                <action selector="toSettings:" destination="BYZ-38-t0r" id="pI7-YC-kAG"/>
                                             </connections>
                                         </barButtonItem>
                                     </navigationItem>
@@ -85,7 +84,7 @@
                                             <outlet property="descriptionLabel" destination="9Q1-Jh-ea7" id="6f4-6i-axH"/>
                                             <outlet property="iconImageView" destination="P0D-lK-FDu" id="cTI-28-oeE"/>
                                             <outlet property="titleLabel" destination="m84-2V-CN3" id="R0j-S7-p07"/>
-                                            <segue destination="9Qt-yk-Fcn" kind="presentation" identifier="setQuestion" modalPresentationStyle="fullScreen" id="IKR-2z-q5D"/>
+                                            <segue destination="9Qt-yk-Fcn" kind="presentation" identifier="setQuestion" modalPresentationStyle="fullScreen" id="JKZ-8K-HOm"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -106,73 +105,12 @@
                     </view>
                     <navigationItem key="navigationItem" id="h5X-Fe-Sru"/>
                     <connections>
-                        <outlet property="settingsButton" destination="tBH-35-QoV" id="jTJ-52-baw"/>
                         <outlet property="tableView" destination="pig-H4-7pT" id="e2a-dR-1r9"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="973.28244274809151" y="-2.1126760563380285"/>
-        </scene>
-        <!--Settings View Controller-->
-        <scene sceneID="hls-NO-74A">
-            <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="hN5-2v-d7d" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <viewController id="YZa-yW-2sx" customClass="Settings_ViewController" customModule="iQuiz" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="KTl-DY-rlo">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="N3p-tY-UPb">
-                                <rect key="frame" x="165" y="496" width="63" height="35"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="tinted" title="Okay"/>
-                                <connections>
-                                    <action selector="clickSubmitButton:" destination="YZa-yW-2sx" eventType="primaryActionTriggered" id="Sqw-Lu-b7C"/>
-                                </connections>
-                            </button>
-                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Kc-om-BUL">
-                                <rect key="frame" x="0.0" y="61" width="393" height="44"/>
-                                <items>
-                                    <navigationItem title="Settings" id="LZ5-iF-sgp">
-                                        <barButtonItem key="rightBarButtonItem" title="Settings" id="Xu4-om-jRP"/>
-                                    </navigationItem>
-                                </items>
-                            </navigationBar>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Djg-AC-eNh">
-                                <rect key="frame" x="119" y="310" width="155" height="26"/>
-                                <attributedString key="attributedText">
-                                    <fragment content="Settings go here.">
-                                        <attributes>
-                                            <color key="NSColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <font key="NSFont" metaFont="system" size="21"/>
-                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
-                                        </attributes>
-                                    </fragment>
-                                </attributedString>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="lh4-Nf-8dc"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <constraints>
-                            <constraint firstItem="2Kc-om-BUL" firstAttribute="leading" secondItem="KTl-DY-rlo" secondAttribute="leading" id="FaR-EJ-WZI"/>
-                            <constraint firstItem="N3p-tY-UPb" firstAttribute="centerX" secondItem="Djg-AC-eNh" secondAttribute="centerX" id="G8Y-8I-LNj"/>
-                            <constraint firstItem="lh4-Nf-8dc" firstAttribute="bottom" secondItem="N3p-tY-UPb" secondAttribute="bottom" constant="287" id="IWN-6I-HEV"/>
-                            <constraint firstItem="N3p-tY-UPb" firstAttribute="centerX" secondItem="2Kc-om-BUL" secondAttribute="centerX" id="R84-aI-8ZL"/>
-                            <constraint firstItem="2Kc-om-BUL" firstAttribute="top" secondItem="lh4-Nf-8dc" secondAttribute="top" constant="2" id="gFr-tN-0RR"/>
-                            <constraint firstItem="Djg-AC-eNh" firstAttribute="top" secondItem="KTl-DY-rlo" secondAttribute="top" constant="310" id="iow-Po-ydr"/>
-                            <constraint firstItem="N3p-tY-UPb" firstAttribute="centerX" secondItem="KTl-DY-rlo" secondAttribute="centerX" id="r6r-zV-aHU"/>
-                            <constraint firstItem="Djg-AC-eNh" firstAttribute="centerX" secondItem="2Kc-om-BUL" secondAttribute="centerX" id="ugU-he-4mz"/>
-                        </constraints>
-                    </view>
-                    <connections>
-                        <outlet property="OkayButton" destination="N3p-tY-UPb" id="Wse-ua-BLD"/>
-                        <segue destination="BYZ-38-t0r" kind="presentation" identifier="toHome" modalPresentationStyle="fullScreen" id="ESe-pk-4Na"/>
-                    </connections>
-                </viewController>
-            </objects>
-            <point key="canvasLocation" x="1840.4580152671756" y="-2.1126760563380285"/>
         </scene>
         <!--Quiz View Controller-->
         <scene sceneID="mR4-EA-1hQ">
@@ -346,6 +284,7 @@
                             <constraint firstItem="tBr-Ob-5Xa" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="cIP-hd-Yzd" secondAttribute="trailing" symbolic="YES" id="xHo-iW-rss"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="ims-f1-e3D"/>
                     <connections>
                         <outlet property="backButton" destination="gMD-aC-aHy" id="v04-pl-QOf"/>
                         <outlet property="feedbackLabel" destination="kMT-Dq-NsK" id="ZRL-y2-HJM"/>
@@ -362,7 +301,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CA8-Z8-mFh" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="971.7557251908396" y="744.36619718309862"/>
+            <point key="canvasLocation" x="1747" y="-2"/>
         </scene>
         <!--FinalView Controller-->
         <scene sceneID="e5S-2Y-YPe">
@@ -415,7 +354,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FbC-Nh-kJW" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1838.9312977099237" y="743.66197183098598"/>
+            <point key="canvasLocation" x="2543" y="-2"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>

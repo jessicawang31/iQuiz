@@ -18,15 +18,15 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var settingsButton: UIBarButtonItem!
     
-    // Use a simple tuple array just like the working code
+    // tuple array
     let quizTopics = [
         ("Mathematics", "How are you math skills?"),
         ("Science", "Ready to put your knowledge to the test?"),
         ("Marvel Super Heroes", "Are you a real Marvel fan?")
     ]
     
-    var selectedTopic: String = "Marvel Super Heroes"
-//    var selectedTopic: String?
+//    var selectedTopic: String = "Science"
+    var selectedTopic: String?
 
     
     override func viewDidLoad() {
@@ -79,7 +79,16 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         return 170
     }
 
+
     @IBAction func toSettings(_ sender: Any) {
-        performSegue(withIdentifier: "toSettings", sender: sender)
+        let alert = UIAlertController(
+            title: "Settings",
+            message: "Settings go here",
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+
+        present(alert, animated: true)
     }
+
 }

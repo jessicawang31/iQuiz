@@ -21,7 +21,6 @@ class QuizViewController: UIViewController {
     @IBOutlet weak var pointsLabel: UILabel!
     @IBOutlet weak var promptLabel: UILabel!
 
-    // MARK: - Properties
     var topicTitle: String?
     var currentQuestionIndex = 0
     var selectedOption = 0
@@ -30,39 +29,37 @@ class QuizViewController: UIViewController {
     var totalQuestions = 0
     var questions: [(String, [String], Int)] = []
 
-    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         configureQuestions()
         loadQuestion()
     }
 
-    // MARK: - Configuration
     func configureQuestions() {
         guard let topic = topicTitle else { return }
 
-        // Reset state for a new quiz session
+        // reset  for new quiz
         currentQuestionIndex = 0
         selectedOption = 0
         correctAnswer = 0
         points = 0
         questions = []
 
-        // Load appropriate questions
+        // load questions
         switch topic {
         case "Science":
             questions = [
-                ("What is fire?", ["Classical element", "Magic", "A band", "Fire!"], 1)
+                ("What gas do plants absorb from the air?", ["Carbon Dioxide", "Oxygen", "Hydrogen", "Chlorine"], 1)
             ]
         case "Mathematics":
             questions = [
-                ("What is 2 + 2?", ["4", "22", "Irrational", "Unknown"], 1)
+                ("What is 5 * 5?", ["4", "25", "Infiniy", "Unknown"], 1)
             ]
         case "Marvel Super Heroes":
             questions = [
-                ("Who is Iron Man?", ["Tony Stark", "Obadiah Stane", "Megadeth song", "Nobody knows"], 1),
-                ("Who founded the X-Men?", ["Tony Stark", "Professor X", "X-Institute", "Erik Lensherr"], 2),
-                ("How did Spider-Man get powers?", ["Bitten by spider", "Ate spider", "Is spider", "Saw spider"], 1)
+                ("How many infinity stones are there?", ["Infinity", "4", "6", "Nobody knows"], 1),
+                ("Who picked up Thor's Hammer at the end of Endgame?", ["Captain America", "Spiderman", "Iron Man", "Nah, only Thor can"], 2),
+                ("Who didn't play Spiderman?", ["Andrew Garfiled", "Tom Holland", "Tony Stark", "Toby Maguire"], 1)
             ]
         default: break
         }
@@ -92,7 +89,7 @@ class QuizViewController: UIViewController {
 //        }
 //
 //        totalQuestions = questions.count
-//        print("📚 Loaded \(questions.count) questions")
+//        print("Loaded \(questions.count) questions")
 //    }
 
 
@@ -103,7 +100,6 @@ class QuizViewController: UIViewController {
         let (question, options, correct) = questions[currentQuestionIndex]
         questionTextView.text = question
         correctAnswer = correct
-//        totalQuestions += 1
         selectedOption = 0
 
         option1Button.setTitle(options[0], for: .normal)
@@ -113,7 +109,6 @@ class QuizViewController: UIViewController {
         updatePointsLabel()
     }
 
-    // MARK: - UI Logic
     func resetUI() {
         feedbackLabel.isHidden = true
         promptLabel.isHidden = true
@@ -166,7 +161,6 @@ class QuizViewController: UIViewController {
         backButton.isHidden = !active
     }
 
-    // MARK: - IBActions
     @IBAction func selectOption1(_ sender: UIButton) {
         selectedOption = 1
         highlightOption(selectedOption)
@@ -226,7 +220,6 @@ class QuizViewController: UIViewController {
         performSegue(withIdentifier: "toHome", sender: self)
     }
 
-    // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showFinal",
            let finalVC = segue.destination as? FinalViewController {
