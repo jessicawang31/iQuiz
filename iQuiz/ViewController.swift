@@ -7,6 +7,20 @@
 
 import UIKit
 
+// pt3
+struct QuizTopic: Codable {
+    let title: String
+    let desc: String
+    let questions: [Question]
+}
+
+struct Question: Codable {
+    let text: String
+    let answers: [String]
+    let answer: Int
+}
+//
+
 class QuizCell: UITableViewCell {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
@@ -33,7 +47,49 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         super.viewDidLoad()
         tableView.dataSource = self
         tableView.delegate = self
+        //pt3
+        let savedURL = UserDefaults.standard.string(forKey: "quizURL") ?? "http://tednewardsandbox.site44.com/questions.json"
+        fetchQuizzes(from: savedURL)
+
     }
+    
+    // pt3
+    func fetchQuizzes(from urlString: String) {
+        guard let url = URL(string: urlString) else {
+            print("Invalid URL")
+            return
+        }
+
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    self.showNetworkAlert(message: "failed: \(error.localizedDescription)")
+                    return
+                }
+                guard let data = data else {
+                    self.showNetworkAlert(message: "no data received")
+                    return
+                }
+                do {
+                    let decoder = JSONDecoder()
+                    let fetchedTopics = try decoder.decode([QuizTopic].self, from: data)
+                    print("success!: \(fetchedTopics.count)")
+                    // TODO: Store fetchedTopics in your quizTopics array and reload tableView
+                } catch {
+                    self.showNetworkAlert(message: "failed")
+                    print("error: \(error)")
+                }
+            }
+        }.resume()
+    }
+    
+    func showNetworkAlert(message: String) {
+        let alert = UIAlertController(title: "Network Error", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+    }
+
+    //
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return quizTopics.count
@@ -80,15 +136,29 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
 
 
+//    @IBAction func toSettings(_ sender: Any) {
+//        let alert = UIAlertController(
+//            title: "Settings",
+//            message: "Settings go here",
+//            preferredStyle: .alert
+//        )
+//        alert.addAction(UIAlertAction(title: "OK", style: .default))
+//
+//        present(alert, animated: true)
+//    }
     @IBAction func toSettings(_ sender: Any) {
-        let alert = UIAlertController(
-            title: "Settings",
-            message: "Settings go here",
-            preferredStyle: .alert
-        )
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
-
-        present(alert, animated: true)
-    }
+            let alert = UIAlertController(title: "Settings", message: "Enter a URL", preferredStyle: .alert)
+            alert.addTextField { textField in
+                textField.placeholder = "http://..."
+            }
+            alert.addAction(UIAlertAction(title: "Check Now", style: .default, handler: { _ in
+                if let url = alert.textFields?.first?.text, !url.isEmpty {
+                    UserDefaults.standard.set(url, forKey: "quizURL")
+                    self.fetchQuizzes(from: url)
+                }
+            }))
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+            present(alert, animated: true)
+        }
 
 }
