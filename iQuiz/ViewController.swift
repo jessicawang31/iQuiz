@@ -76,7 +76,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
 
     }
     
-    // pt3
+    // pt4
     func fetchQuizzes(from urlString: String) {
         guard let url = URL(string: urlString) else {
             print("Invalid URL")
@@ -86,27 +86,35 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         URLSession.shared.dataTask(with: url) { data, response, error in
             DispatchQueue.main.async {
                 if let error = error {
-                    self.showNetworkAlert(message: "failed: \(error.localizedDescription)")
+                    self.loadLocalQuizzes() // Fallback if offline
+                    self.showNetworkAlert(message: "Failed: \(error.localizedDescription)")
                     return
                 }
+
                 guard let data = data else {
-                    self.showNetworkAlert(message: "no data received")
+                    self.loadLocalQuizzes()
+                    self.showNetworkAlert(message: "No data received")
                     return
                 }
+
                 do {
                     let decoder = JSONDecoder()
                     let fetchedTopics = try decoder.decode([QuizTopic].self, from: data)
-                    print("success: \(fetchedTopics.count)")
                     self.quizTopics = fetchedTopics.map { ($0.title, $0.desc) }
                     self.tableView.reloadData()
 
+                    let fileURL = self.getLocalFileURL()
+                    try data.write(to: fileURL)
+                    print("Saved locally")
                 } catch {
-                    self.showNetworkAlert(message: "failed")
-                    print("error: \(error)")
+                    self.loadLocalQuizzes()
+                    self.showNetworkAlert(message: "Failed")
+                    print("Error: \(error)")
                 }
             }
         }.resume()
     }
+    
     
     func showNetworkAlert(message: String) {
         let alert = UIAlertController(title: "Network Error", message: message, preferredStyle: .alert)
@@ -176,14 +184,33 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             alert.addTextField { textField in
                 textField.placeholder = "http://..."
             }
-            alert.addAction(UIAlertAction(title: "Check Now", style: .default, handler: { _ in
+            alert.addAction(UIAlertAction(title: "check Now", style: .default, handler: { _ in
                 if let url = alert.textFields?.first?.text, !url.isEmpty {
                     UserDefaults.standard.set(url, forKey: "quizURL")
                     self.fetchQuizzes(from: url)
                 }
             }))
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+            alert.addAction(UIAlertAction(title: "cancel", style: .cancel))
             present(alert, animated: true)
         }
+    
+    func getLocalFileURL() -> URL {
+        let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        return docs.appendingPathComponent("quizzes.json")
+    }
+
+    func loadLocalQuizzes() {
+        let fileURL = getLocalFileURL()
+        do {
+            let data = try Data(contentsOf: fileURL)
+            let decoder = JSONDecoder()
+            let localTopics = try decoder.decode([QuizTopic].self, from: data)
+            self.quizTopics = localTopics.map { ($0.title, $0.desc) }
+            self.tableView.reloadData()
+            print("loaded local quizzes.")
+        } catch {
+            print("failed: \(error)")
+        }
+    }
 
 }
