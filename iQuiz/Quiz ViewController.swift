@@ -8,7 +8,7 @@
 import UIKit
 
 class QuizViewController: UIViewController {
-    // MARK: - IBOutlets
+
     @IBOutlet weak var questionTextView: UITextView!
     @IBOutlet weak var option1Button: UIButton!
     @IBOutlet weak var option2Button: UIButton!
@@ -27,49 +27,20 @@ class QuizViewController: UIViewController {
     var correctAnswer = 0
     var points = 0
     var totalQuestions = 0
+
     var questions: [(String, [String], Int)] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureQuestions()
-        if let topic = topicTitle {
-            print("Loaded topic: \(topic)")
-            loadQuestion()
-        } else {
-            print("topicTitle is nil")
-        }
-    }
 
-    func configureQuestions() {
-        guard let topic = topicTitle else { return }
-
-        // reset  for new quiz
+        // counters
         currentQuestionIndex = 0
         selectedOption = 0
         correctAnswer = 0
         points = 0
-        questions = []
-
-        // load questions
-        switch topic {
-        case "Science":
-            questions = [
-                ("What gas do plants absorb from the air?", ["Carbon Dioxide", "Oxygen", "Hydrogen", "Chlorine"], 1)
-            ]
-        case "Mathematics":
-            questions = [
-                ("What is 5 * 5?", ["4", "25", "Infinity", "Unknown"], 2)
-            ]
-        case "Marvel Super Heroes":
-            questions = [
-                ("How many infinity stones are there?", ["Infinity", "4", "6", "Nobody knows"], 3),
-                ("Who picked up Thor's Hammer at the end of Endgame?", ["Captain America", "Spiderman", "Iron Man", "Nah, only Thor can"], 1),
-                ("Who didn't play Spiderman?", ["Andrew Garfiled", "Tom Holland", "Tony Stark", "Toby Maguire"], 3)
-            ]
-        default: break
-        }
 
         totalQuestions = questions.count
+        loadQuestion()
     }
 
     func loadQuestion() {
@@ -164,7 +135,6 @@ class QuizViewController: UIViewController {
         promptLabel.isHidden = true
     }
 
-
     @IBAction func submitTapped(_ sender: UIButton) {
         guard selectedOption > 0 else {
             promptLabel.isHidden = false
@@ -183,20 +153,16 @@ class QuizViewController: UIViewController {
         }
     }
 
-    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
-        if identifier == "showFinal" {
-            if currentQuestionIndex < questions.count {
-                loadQuestion()
-                return false // stop segue, just load next question
-            }
-            return true // allow segue only when out of questions
-        }
-        return true // allow other segues
-    }
-
-    
     @IBAction func backTapped(_ sender: UIButton) {
         performSegue(withIdentifier: "toHome", sender: self)
+    }
+
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        if identifier == "showFinal", currentQuestionIndex < questions.count {
+            loadQuestion()
+            return false
+        }
+        return true
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

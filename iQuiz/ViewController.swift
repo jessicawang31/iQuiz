@@ -14,74 +14,86 @@ class QuizCell: UITableViewCell {
 }
 
 class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
-    
+
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var settingsButton: UIBarButtonItem!
-    
-    // tuple array
-    let quizTopics = [
-        ("Mathematics", "How are you math skills?"),
-        ("Science", "Ready to put your knowledge to the test?"),
-        ("Marvel Super Heroes", "Are you a real Marvel fan?")
-    ]
-    
-//    var selectedTopic: String = "Science"
+
+    var quizTopics: [QuizTopic] = []
+
     var selectedTopic: String?
 
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.dataSource = self
         tableView.delegate = self
     }
-    
+
+    // pt4
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        if let savedTopics = loadSavedTopics() {
+            quizTopics = savedTopics
+        } else {
+            quizTopics = [
+                QuizTopic(title: "Mathematics", desc: "How are your math skills?", questions: []),
+                QuizTopic(title: "Science", desc: "Ready to put your knowledge to the test?", questions: []),
+                QuizTopic(title: "Marvel Super Heroes", desc: "Are you a real Marvel fan?", questions: [])
+            ]
+        }
+
+        tableView.reloadData()
+    }
+
+    func loadSavedTopics() -> [QuizTopic]? {
+        let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            .appendingPathComponent("quizzes.json")
+        if let data = try? Data(contentsOf: url) {
+            return try? JSONDecoder().decode([QuizTopic].self, from: data)
+        }
+        return nil
+    }
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return quizTopics.count
     }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "QuizCell", for: indexPath) as! QuizCell
         let topic = quizTopics[indexPath.row]
-        
-        cell.titleLabel.text = topic.0
-        cell.descriptionLabel.text = topic.1
-        
+
+        cell.titleLabel.text = topic.title
+        cell.descriptionLabel.text = topic.desc
+
         let imgName: String
-        
-        print(topic.0)
-        switch topic.0 {
-        case "Mathematics":
-            imgName = "Math"
-            print(imgName)
-        case "Science":
-            imgName = "Science"
-            print(imgName)
-        case "Marvel Super Heroes":
-            imgName = "Marvel"
-            print(imgName)
-        default:
-            imgName = ""
-            print(imgName)
+        switch topic.title {
+        case "Mathematics": imgName = "Math"
+        case "Science!": imgName = "Science"
+        case "Marvel Super Heroes": imgName = "Marvel"
+        default: imgName = ""
         }
+
         cell.iconImageView.image = UIImage(named: imgName)
-        
         return cell
     }
-    
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectedTopic = quizTopics[indexPath.row].0
-        print("Selected topic: \(selectedTopic ?? "nil")")
+        selectedTopic = quizTopics[indexPath.row].title
+        performSegue(withIdentifier: "setQuestion", sender: tableView.cellForRow(at: indexPath))
     }
-    
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "setQuestion",
            let destinationVC = segue.destination as? QuizViewController,
            let indexPath = tableView.indexPath(for: sender as! UITableViewCell) {
-            
-            selectedTopic = quizTopics[indexPath.row].0
+
+            let selected = quizTopics[indexPath.row]
+            selectedTopic = selected.title
             print("Passing topic: \(selectedTopic ?? "nil")")
-            destinationVC.topicTitle = selectedTopic
+            destinationVC.topicTitle = selected.title
+            destinationVC.questions = selected.questions.map {
+                ($0.text, $0.answers, Int($0.answer) ?? 0)
+            }
         }
     }
 
@@ -89,16 +101,14 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         return 170
     }
 
-
     @IBAction func toSettings(_ sender: Any) {
+        // If using segue now, this could be removed
         let alert = UIAlertController(
             title: "Settings",
             message: "Settings go here",
             preferredStyle: .alert
         )
         alert.addAction(UIAlertAction(title: "OK", style: .default))
-
         present(alert, animated: true)
     }
-
 }
