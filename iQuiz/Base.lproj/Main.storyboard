@@ -84,7 +84,7 @@
                                             <outlet property="descriptionLabel" destination="9Q1-Jh-ea7" id="6f4-6i-axH"/>
                                             <outlet property="iconImageView" destination="P0D-lK-FDu" id="cTI-28-oeE"/>
                                             <outlet property="titleLabel" destination="m84-2V-CN3" id="R0j-S7-p07"/>
-                                            <segue destination="9Qt-yk-Fcn" kind="presentation" identifier="setQuestion" modalPresentationStyle="fullScreen" id="JKZ-8K-HOm"/>
+                                            <segue destination="9Qt-yk-Fcn" kind="presentation" identifier="setQuestion" modalPresentationStyle="fullScreen" id="haY-SC-yr0"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>

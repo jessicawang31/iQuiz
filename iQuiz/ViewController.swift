@@ -48,15 +48,21 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         cell.descriptionLabel.text = topic.1
         
         let imgName: String
+        
+        print(topic.0)
         switch topic.0 {
         case "Mathematics":
             imgName = "Math"
+            print(imgName)
         case "Science":
             imgName = "Science"
+            print(imgName)
         case "Marvel Super Heroes":
             imgName = "Marvel"
+            print(imgName)
         default:
             imgName = ""
+            print(imgName)
         }
         cell.iconImageView.image = UIImage(named: imgName)
         
@@ -65,12 +71,16 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectedTopic = quizTopics[indexPath.row].0
-        performSegue(withIdentifier: "setQuestion", sender: self)
+        print("Selected topic: \(selectedTopic ?? "nil")")
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "setQuestion",
-           let destinationVC = segue.destination as? QuizViewController {
+           let destinationVC = segue.destination as? QuizViewController,
+           let indexPath = tableView.indexPath(for: sender as! UITableViewCell) {
+            
+            selectedTopic = quizTopics[indexPath.row].0
+            print("Passing topic: \(selectedTopic ?? "nil")")
             destinationVC.topicTitle = selectedTopic
         }
     }

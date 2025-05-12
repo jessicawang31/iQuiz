@@ -32,7 +32,12 @@ class QuizViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureQuestions()
-        loadQuestion()
+        if let topic = topicTitle {
+            print("Loaded topic: \(topic)")
+            loadQuestion()
+        } else {
+            print("topicTitle is nil")
+        }
     }
 
     func configureQuestions() {
@@ -53,45 +58,19 @@ class QuizViewController: UIViewController {
             ]
         case "Mathematics":
             questions = [
-                ("What is 5 * 5?", ["4", "25", "Infiniy", "Unknown"], 1)
+                ("What is 5 * 5?", ["4", "25", "Infinity", "Unknown"], 2)
             ]
         case "Marvel Super Heroes":
             questions = [
-                ("How many infinity stones are there?", ["Infinity", "4", "6", "Nobody knows"], 1),
-                ("Who picked up Thor's Hammer at the end of Endgame?", ["Captain America", "Spiderman", "Iron Man", "Nah, only Thor can"], 2),
-                ("Who didn't play Spiderman?", ["Andrew Garfiled", "Tom Holland", "Tony Stark", "Toby Maguire"], 1)
+                ("How many infinity stones are there?", ["Infinity", "4", "6", "Nobody knows"], 3),
+                ("Who picked up Thor's Hammer at the end of Endgame?", ["Captain America", "Spiderman", "Iron Man", "Nah, only Thor can"], 1),
+                ("Who didn't play Spiderman?", ["Andrew Garfiled", "Tom Holland", "Tony Stark", "Toby Maguire"], 3)
             ]
         default: break
         }
 
         totalQuestions = questions.count
     }
-
-//    func configureQuestions() {
-//        guard let topic = topicTitle?.trimmingCharacters(in: .whitespacesAndNewlines) else { return }
-//        
-//        print("🧠 Topic received: \(topic)")
-//        
-//        if topic.contains("Science") {
-//            questions = [
-//                ("What is fire?", ["Classical element", "Magic", "A band", "Fire!"], 1)
-//            ]
-//        } else if topic.contains("Mathematics") {
-//            questions = [
-//                ("What is 2 + 2?", ["4", "22", "Irrational", "Unknown"], 1)
-//            ]
-//        } else if topic.contains("Marvel") {
-//            questions = [
-//                ("Who is Iron Man?", ["Tony Stark", "Obadiah Stane", "Megadeth song", "Nobody knows"], 1),
-//                ("Who founded the X-Men?", ["Tony Stark", "Professor X", "X-Institute", "Erik Lensherr"], 2),
-//                ("How did Spider-Man get powers?", ["Bitten by spider", "Ate spider", "Is spider", "Saw spider"], 1)
-//            ]
-//        }
-//
-//        totalQuestions = questions.count
-//        print("Loaded \(questions.count) questions")
-//    }
-
 
     func loadQuestion() {
         resetUI()
